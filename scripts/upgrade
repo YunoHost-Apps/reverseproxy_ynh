@@ -42,10 +42,9 @@ ynh_abort_if_errors
 rp_validate_proxy_path "$proxy_path"
 
 # Configure nginx
-rp_make_webconfig
-
-# Reload nginx
-rp_reload_web
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+ynh_add_nginx_config
 
 #=================================================
 # END OF SCRIPT

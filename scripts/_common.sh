@@ -24,30 +24,3 @@ rp_validate_proxy_path() {
         fi
     fi
 }
-
-# Make reverse proxy public if $1 is 1
-# Yunohost boolean params are 1 if true
-rp_make_permissions() {
-    ynh_script_progression --message="Configuring permissions..." --weight=2
-
-    if [ $1 = 1 ]; then
-        ynh_permission_update --permission="main" --add="visitors"
-    fi
-}
-
-# (re)generate nginx config
-rp_make_webconfig() {
-    ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-
-    # Nginx configuration
-    ynh_replace_string "YNH_LOCATION" "$path_url" ../conf/nginx.conf
-    ynh_replace_string "YNH_PROXY_PATH" "$proxy_path" ../conf/nginx.conf
-    ynh_replace_string "YNH_APPNAME" "$app" ../conf/nginx.conf
-    ynh_replace_string "YNH_ASSETS_PATH" "$assets_path" ../conf/nginx.conf
-    cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-}
-
-rp_reload_web() {
-    ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-    ynh_systemd_action --service_name=nginx --action=reload
-}

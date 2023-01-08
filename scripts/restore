@@ -42,7 +42,8 @@ NGINX_CONF="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 ynh_restore_file "$NGINX_CONF"
 
 # Reload nginx
-rp_reload_web
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

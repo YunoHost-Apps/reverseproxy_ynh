@@ -33,15 +33,17 @@ new_path=$YNH_APP_NEW_PATH
 #=================================================
 
 # Nginx configuration
-ynh_replace_string "$old_path {" "$new_path {" /etc/nginx/conf.d/$old_domain.d/$app.conf
-ynh_replace_string "${old_path}/ {" "${new_path}/ {" /etc/nginx/conf.d/$old_domain.d/$app.conf
-ynh_replace_string "302 ${old_path}/" "302 ${new_path}/" /etc/nginx/conf.d/$old_domain.d/$app.conf
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+path_url="$new_path"
+domain="$old_domain"
+proxy_path="$(ynh_app_setting_get --app=$app --key=proxy_path)"
+assets_path="$(ynh_app_setting_get --app=$app --key=assets_path)"
+ynh_add_nginx_config
 
-# Maybe only path part has changed... only move file if domain has changed
+# Move file to new domain if domain has changed
 [[ "$old_domain" != "$new_domain" ]] && mv /etc/nginx/conf.d/$old_domain.d/$app.conf /etc/nginx/conf.d/$new_domain.d/$app.conf
 
-# Reload nginx
-rp_reload_web
 
 #=================================================
 # END OF SCRIPT

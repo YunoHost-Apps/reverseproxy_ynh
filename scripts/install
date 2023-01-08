@@ -44,13 +44,15 @@ ynh_app_setting_set --app=$app --key=proxy_path --value=$proxy_path
 ynh_app_setting_set --app=$app --key=assets_path --value=$assets_path
 
 # Configure nginx
-rp_make_webconfig
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+ynh_add_nginx_config
 
-# Make app public if necessary
-rp_make_permissions $is_public
-
-# Reload nginx
-rp_reload_web
+# Make app public if necessary (yunohost setting boolean is 1 when true)
+ynh_script_progression --message="Configuring permissions..." --weight=2
+if [ $is_public -eq 1 ]; then
+    ynh_permission_update --permission="main" --add="visitors"
+fi
 
 #=================================================
 # END OF SCRIPT

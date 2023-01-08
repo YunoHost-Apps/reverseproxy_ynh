@@ -7,6 +7,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -17,60 +18,8 @@ source /usr/share/yunohost/helpers
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
-redirect_type=$(ynh_app_setting_get --app=$app --key=redirect_type)
-redirect_path=$(ynh_app_setting_get --app=$app --key=redirect_path)
-
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-
-# Fix is_public as a boolean value
-# Default value for redirect_type if upgrading from https://github.com/scith/redirect_ynh
-if [ -z "$redirect_type" ];
-then
-    redirect_type="proxy"
-    ynh_app_setting_set $app 'redirect_type' $redirect_type
-fi
-
-# Migrate away from old stuff with 'is_public' and old redirect type names
-is_public=$(ynh_app_setting_get "$app" is_public)
-if [ -n "$is_public" ]
-then
-    if [ "$is_public" = "Yes" ]; then
-        is_public=1
-    elif [ "$is_public" = "No" ]; then
-        is_public=0
-    fi
-
-    if [ "$is_public" = "0" ] && [ "$redirect_type" != "proxy" ]; then
-       echo "WARNING: You previously had a 'supposedly' private 301 or 302 redirection... but it was found that it was public all along and it is not easy to create such a private redirection. Your 301 or 302 redirection will be re-flagged as public..." >&2
-       is_public=1
-    fi
-
-    if [ "$redirect_type" == "proxy" ] && [ "$is_public" = "1" ]
-    then
-        redirect_type="public_proxy"
-    elif [ "$redirect_type" == "proxy" ] && [ "$is_public" = "0" ]
-    then
-        redirect_type="private_proxy"
-    elif [ "$redirect_type" == "visible_302" ]
-    then
-        redirect_type="public_302"
-    elif [ "$redirect_type" == "visible_301" ]
-    then
-        redirect_type="public_301"
-    fi
-    
-    ynh_app_setting_set $app 'redirect_type' $redirect_type
-fi
-
-# Migrate legacy permissions to new system
-if ynh_legacy_permissions_exists
-then
-    ynh_legacy_permissions_delete_all
-
-    ynh_app_setting_delete --app=$app --key=is_public
-fi
+proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
+assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -85,50 +34,20 @@ ynh_clean_setup () {
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
-# Validate redirect path
-url_regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-[[ ! $redirect_path =~ $url_regex ]] && ynh_die "Invalid destination: $redirect_path" 1
-
 #=================================================
-# CONFIGURE NGINX
+# REVERSE PROXY LOGIC
 #=================================================
 
-# Nginx configuration
-for FILE in $(ls ../conf/nginx-*.conf)
-do
-    ynh_replace_string "YNH_LOCATION" "$path_url" $FILE
-done
-if [ "$redirect_type" = "public_302" ];
-then
-    ynh_replace_string "YNH_REDIRECT_PATH" "$redirect_path" ../conf/nginx-visible-302.conf
-    cp ../conf/nginx-visible-302.conf /etc/nginx/conf.d/$domain.d/$app.conf
-elif [ "$redirect_type" = "public_301" ];
-then
-    ynh_replace_string "YNH_REDIRECT_PATH" "$redirect_path" ../conf/nginx-visible-301.conf
-    cp ../conf/nginx-visible-301.conf /etc/nginx/conf.d/$domain.d/$app.conf
-elif [ "$redirect_type" = "public_proxy" ] || [ "$redirect_type" = "private_proxy" ];
-then
-    ynh_replace_string "YNH_REDIRECT_PATH" "$redirect_path" ../conf/nginx-proxy.conf
-    cp ../conf/nginx-proxy.conf /etc/nginx/conf.d/$domain.d/$app.conf
-fi
+# Validate proxy destination
+rp_validate_proxy_path "$proxy_path"
 
-#=================================================
-# CONFIGURE SSOWAT
-#=================================================
+# Configure nginx
+ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+rp_make_webconfig
 
-# Make app public if necessary
-if [ "$redirect_type" != "private_proxy" ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_permission_update --permission="main" --add="visitors"
-fi
-
-#=================================================
-# RELOAD NGINX
-#=================================================
+# Reload nginx
 ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
+rp_reload_web
 
 #=================================================
 # END OF SCRIPT

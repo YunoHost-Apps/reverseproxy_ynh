@@ -1,21 +1,20 @@
 {
-    "name": "Redirect",
-    "id": "redirect",
+    "name": "Reverse Proxy",
+    "id": "reverseproxy",
     "packaging_format": 1,
     "description": {
-        "en": "Create a redirection or a proxy to another path",
-        "fr": "Créer une redirection ou un proxy vers un autre emplacement"
+        "en": "Create a reverse proxy to a socket/port, optionally serve static files from folder",
+        "fr": "Créer un reverse proxy vers un socket/port, optionnellement servir des fichiers statiques depuis un dossier"
     },
-    "version": "1.0.2~ynh1",
+    "version": "0.1~ynh1",
     "license": "AGPL-3.0-or-later",
-    "url": "https://github.com/YunoHost-Apps/redirect_ynh",
+    "url": "https://en.wikipedia.org/wiki/Reverse_proxy",
     "upstream": {
-        "license": "AGPL-3.0-or-later",
-        "website": "https://github.com/YunoHost-Apps/redirect_ynh"
+        "website": "https://en.wikipedia.org/wiki/Reverse_proxy"
     },
     "maintainer": {
-        "name": "alexAubin",
-        "email": "alex.aubin@mailoo.org"
+        "name": "selfhoster1312",
+        "email": "selfhoster1312@kl.netlib.re"
     },
     "requirements": {
         "yunohost": ">= 4.2.0"
@@ -26,42 +25,39 @@
     ],
     "arguments": {
         "install" : [
-            {
-                "name": "domain",
-                "type": "domain",
-                "example": "domain.org"
+        {
+            "name": "domain",
+            "type": "domain"
+        },
+        {
+            "name": "path",
+            "type": "path",
+            "example": "/proxy"
+        },
+        {
+            "name": "proxy_path",
+            "type": "string",
+            "ask": {
+                "en": "Redirect destination path (unix:/file for socket)",
+                "fr": "Emplacement de destination (unix:/fichier pour socket)"
             },
-            {
-                "name": "path",
-                "type": "path",
-                "example": "/redirect",
-                "default": "/redirect"
+            "example": "http://127.0.0.1:8080/app/"
+        },
+        {
+            "name": "is_public",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "name": "assets_path",
+            "type": "string",
+            "ask": {
+                "en": "Static assets folder",
+                "fr": "Dossier pour les fichiers statiques"
             },
-            {
-                "name": "redirect_path",
-                "type": "string",
-                "ask": {
-                    "en": "Redirect destination path",
-                    "fr": "Emplacement de destination"
-                },
-                "example": "http://127.0.0.1:8080/app/",
-                "default": "http://127.0.0.1"
-            },
-            {
-                "name": "redirect_type",
-                "type": "string",
-                "ask": {
-                    "en": "Redirect type",
-                    "fr": "Type de redirection"
-                },
-                "choices": {
-                  "public_302": "Visible redirect (302, temporary). Everybody will be able to access it.",
-                  "public_301": "Visible redirect (301, permanent). Everybody will be able to access it.",
-                  "public_proxy": "Proxy, invisible (NGINX proxy_pass). Everybody will be able to access it.",
-                  "private_proxy": "Proxy, invisible (NGINX proxy_pass). Only accessible for allowed users."
-                },
-                "default": "public_302"
-            }
+            "optional": true,
+            "example": "/opt/foo/www/"
+        }
         ]
     }
 }

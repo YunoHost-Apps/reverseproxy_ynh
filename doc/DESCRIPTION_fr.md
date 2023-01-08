@@ -1,5 +1,9 @@
-Cette application permet d'intégrée une tuile personalisée dans le portail utilisateur de YunoHost. Les cas d'usage typiques sont:
-- **redirection 301/302 visible** : avoir une tuile d'app "virtuelle" qui se contente de rediriger vers une autre url ou un site externe
-- **redirection invisible / reverse-proxy** : créer une tuile pour une application locale écoutant sur un port précis, ou bien un conteneur Docker, ou encore une app hébergée sur une autre machine
+Cette application permet de configurer un reverse proxy HTTP(S) pour servir un autre service web, ainsi qu'un dossier (optionnel) pour les assets statiques qui sera servi directement depuis nginx. L'application apparaît comme tuile dans le panel SSOWat, sauf si elle a été configurée autrement après l'installation. L'accès à l'application peut être rendu public.
 
-En terme technique: cette app se contente de rajouter le morceau de configuration NGINX approprié avec soit `redirect` ou `proxy_pass`, et la tuile YunoHost + configuration SSOwat correspondante.
+Les backends supportés sont:
+
+- HTTP en clair (plaintext) vers localhost (127.x.x.x)
+- HTTPS vers n'importe quelle destination
+- fichier socket sur disque local
+
+Attention, SSOWat envoie les identifiants des utilisateurices en clair jusqu'au backend, donc n'utilisez pas cette application pour reverse-proxy un service dans lequel vous n'avez pas confiance (par exemple pour mirrorer un site hébergé par une autre personne).

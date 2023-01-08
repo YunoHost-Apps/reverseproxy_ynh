@@ -6,6 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -23,12 +24,11 @@ ynh_abort_if_errors
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
-redirect_type=$(ynh_app_setting_get --app=$app --key=redirect_type)
-redirect_path=$(ynh_app_setting_get --app=$app --key=redirect_path)
+proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
+assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
 
-# Validate redirect path
-url_regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-[[ ! $redirect_path =~ $url_regex ]] && ynh_die "Invalid destination: $redirect_path" 1
+# Revalidate destination path
+rp_validate_proxy_path "$proxy_path"
 
 # Check configuration files
 NGINX_CONF="/etc/nginx/conf.d/${domain}.d/${app}.conf"
@@ -37,23 +37,8 @@ NGINX_CONF="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 # Restore configuration files
 ynh_restore_file "$NGINX_CONF"
 
-#=================================================
-# SETUP SSOWAT
-#=================================================
-
-# Make app public if necessary
-if [ "$redirect_type" != "private_proxy" ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_permission_update --permission="main" --add="visitors"
-fi
-
-#=================================================
-# RELOAD NGINX AND PHP-FPM
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
+# Reload nginx
+rp_reload_web
 
 #=================================================
 # END OF SCRIPT

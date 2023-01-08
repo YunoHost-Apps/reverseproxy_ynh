@@ -6,6 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -22,7 +23,6 @@ ynh_print_info --message="Loading installation settings..."
 
 # Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
-domain=$(ynh_app_setting_get --app=$app --key=domain)
 
 #=================================================
 # BACKUP THE NGINX CONFIGURATION

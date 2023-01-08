@@ -1,18 +1,7 @@
-## Types de redirection
+### Chemin web du backend
 
-### Redirection visible
+La requête est transmise telle-quelle au serveur backend. Cela veut usuellement dire que le service backend doit avoir connaissance du chemin web utilisé pour accéder au service. Par exemple, si l'application est installée sur `example.com/proxy`, votre application backend devrait produire des liens absolus commençant par `example.com/proxy/`.
 
-Le client sera redirigé vers une autre URL ou site externe
+Pour supporter les URLs relatives depuis le backend, accéder à l'application via `http(s)://example.com/proxy` produit une redirection permanente (302) vers `http(s)://example.com/proxy/` (avec le slash de fin). Sinon, un lien relatif comme `<link rel="stylesheet" href="style.css">` essayerait de charger `http(s)://example.com/style.css`, ce qui échouerait.
 
-- `votre-domaine.com -> un-autre-domaine.net`
-- `votre-domaine.com/foo -> un-autre-domaine.net/bar`
-
-### Redirection invisible (a.k.a "reverse-proxy")
-
-L'adresse du client restera inchangé dans le navigateur. Typiquement utilisé pour intéger dans YunoHost une application installée manuellement.
-    
-- `you-domain.com/foo -> http://172.0.0.1:8080/app`
-
-**IMPORTANT:** il vous faudra peut-être bricoler manuellement `redirect.conf` dans la configuration nginx, en fonction de vos besoins.
-
-**IMPORTANT:** Certaines apps ne supportent pas d'être redirigées depuis un chemin différent à cause du fonctionnement des liens relatifs ... Cela signifie que par exemple une app hébergée sur `http://127.0.0.1:5050/app/` DOIT être routé sur `http://domaine.tld/app/` et PAS http://domaine.tld/unautrechemin/. Par exemple: un conteneur Docker Odoo tourne sur `http://127.0.0.1:8069/`. Il ne sera pas capable de fonctionné correctement si il est routé sur `http://domaine.tld/odoo/` ! Il faut forcément l'installer à la racine d'un domaine, par exemple `http://odoo.domaine.tld/`
+Il est possible que votre service backend ne supporte pas de configurer une "base URL" (chemin web personnalisé). Dans ce cas, il faudra installer l'application sur un (sous-)domaine dédié.

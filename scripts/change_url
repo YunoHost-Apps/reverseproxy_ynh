@@ -6,8 +6,8 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
+source _common.sh
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -20,36 +20,26 @@ ynh_abort_if_errors
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
 
-# Retrieve arguments
 app=$YNH_APP_INSTANCE_NAME
-domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
-proxy_path=$YNH_APP_ARG_PROXY_PATH
-assets_path=$YNH_APP_ARG_ASSETS_PATH
-[[ "$assets_path" = "" ]] && assets_path="/dev/null"
-is_public=$YNH_APP_ARG_IS_PUBLIC
+old_domain=$YNH_APP_OLD_DOMAIN
+new_domain=$YNH_APP_NEW_DOMAIN
+old_path=$YNH_APP_OLD_PATH
+new_path=$YNH_APP_NEW_PATH
+
+# Path availability is already checked for
 
 #=================================================
-# REVERSE PROXY LOGIC
+# CONFIGURE NGINX
 #=================================================
-
-# Check domain/path availability
-ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
-
-# Validate reverse proxy destination
-rp_validate_proxy_path "$proxy_path"
-
-# Save extra settings
-ynh_app_setting_set --app=$app --key=proxy_path --value=$proxy_path
-ynh_app_setting_set --app=$app --key=assets_path --value=$assets_path
-
-# Configure nginx
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-rp_make_webconfig
 
-# Make app public if necessary
-ynh_script_progression --message="Configuring permissions..." --weight=2
-rp_make_permissions $is_public
+# Nginx configuration
+ynh_replace_string "$old_path {" "$new_path {" /etc/nginx/conf.d/$old_domain.d/$app.conf
+ynh_replace_string "${old_path}/ {" "${new_path}/ {" /etc/nginx/conf.d/$old_domain.d/$app.conf
+ynh_replace_string "302 ${old_path}/" "302 ${new_path}/" /etc/nginx/conf.d/$old_domain.d/$app.conf
+
+# Maybe only path part has changed... only move file if domain has changed
+[[ "$old_domain" != "$new_domain" ]] && mv /etc/nginx/conf.d/$old_domain.d/$app.conf /etc/nginx/conf.d/$new_domain.d/$app.conf
 
 # Reload nginx
 ynh_script_progression --message="Reloading NGINX web server..." --weight=1
@@ -59,4 +49,4 @@ rp_reload_web
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression --message="Changing URL of $app completed" --last

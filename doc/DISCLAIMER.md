@@ -1,18 +1,7 @@
-## Redirect type
+### Backend web path
 
-### Visible redirect
+The request is transmitted as-is to the backend server. This usually means that the backend service shoudl be aware of the web path used to access the service. For example, if using the application is installed to `example.com/proxy`, your backend application should produce absolute links starting with `example.com/proxy/` too.
 
-The client will be redirected to another url or external website
+To support relative URLs from the backend, accessing the application via `http(s)://example.com/proxy` will permanent redirect (302) to `http(s)://example.com/proxy/` (trailing slash). Otherwise, a relative link like `<link rel="stylesheet" href="style.css">` would try to load `http(s)://example.com/style.css` which would fail.
 
-- `your-domain.com -> another-domain.net`
-- `your-domain.com/foo -> another-domain.net/bar`
-
-### Invisible redirect (a.k.a "reverse-proxy")
-
-Visitor's address bar will remain the same. Typically used to integrate into YunoHost a manually-installed app into the portal.
-    
-- `you-domain.com/foo -> http://172.0.0.1:8080/app`
-
-**IMPORTANT:** you may have to further tweak the `redirect.conf` in the nginx configuration, depending on your needs!
-
-**IMPORTANT:** Many apps do not support being redirected to a different path due to relative links! This means that some apps being hosted for example on http://127.0.0.1:5050/app/ MUST be redirected to http://domain.tld/app/ and NOT http://domain.tld/someotherapp/. For example : an Odoo Docker container runs on http://127.0.0.1:8069/. You will not be able to redirect it to http://domain.tld/odoo/ ! You have to redirect it to the root, so for example http://odoo.domain.tld/
+It is possible that your backend service does not support setting up a "base URL" (custom web path). In that case, you will have to install the application on a dedicated (sub)domain.

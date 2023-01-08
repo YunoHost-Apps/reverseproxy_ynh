@@ -2,8 +2,8 @@
 	; Manifest
 		domain="domain.tld"
 		path="/path"
-		redirect_type="public_302"
-		redirect_path="http://127.0.0.1"
+		proxy_path="http://127.0.0.1"
+		assets_path=""
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=1

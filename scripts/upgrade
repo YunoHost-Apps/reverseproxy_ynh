@@ -35,18 +35,16 @@ ynh_clean_setup () {
 ynh_abort_if_errors
 
 #=================================================
-# REVERSE PROXY LOGIC
+# REVERSEPROXY_YNH
 #=================================================
 
 # Validate proxy destination
 rp_validate_proxy_path "$proxy_path"
 
 # Configure nginx
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 rp_make_webconfig
 
 # Reload nginx
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 rp_reload_web
 
 #=================================================

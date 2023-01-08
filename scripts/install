@@ -30,7 +30,7 @@ assets_path=$YNH_APP_ARG_ASSETS_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 #=================================================
-# REVERSE PROXY LOGIC
+# REVERSEPROXY_YNH
 #=================================================
 
 # Check domain/path availability
@@ -44,15 +44,12 @@ ynh_app_setting_set --app=$app --key=proxy_path --value=$proxy_path
 ynh_app_setting_set --app=$app --key=assets_path --value=$assets_path
 
 # Configure nginx
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 rp_make_webconfig
 
 # Make app public if necessary
-ynh_script_progression --message="Configuring permissions..." --weight=2
 rp_make_permissions $is_public
 
 # Reload nginx
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 rp_reload_web
 
 #=================================================

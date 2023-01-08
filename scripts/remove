@@ -19,14 +19,13 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 
 #=================================================
-# REMOVE NGINX CONFIGURATION
+# REVERSEPROXY_YNH
 #=================================================
 
 # Remove configuration files
 ynh_secure_remove /etc/nginx/conf.d/$domain.d/$app.conf
 
 # Reload nginx
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 rp_reload_web
 
 #=================================================

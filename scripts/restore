@@ -27,6 +27,10 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
 assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
 
+#=================================================
+# REVERSEPROXY_YNH
+#=================================================
+
 # Revalidate destination path
 rp_validate_proxy_path "$proxy_path"
 

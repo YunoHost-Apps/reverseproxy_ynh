@@ -29,9 +29,8 @@ new_path=$YNH_APP_NEW_PATH
 # Path availability is already checked for
 
 #=================================================
-# CONFIGURE NGINX
+# REVERSEPROXY_YNH
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
 
 # Nginx configuration
 ynh_replace_string "$old_path {" "$new_path {" /etc/nginx/conf.d/$old_domain.d/$app.conf
@@ -42,7 +41,6 @@ ynh_replace_string "302 ${old_path}/" "302 ${new_path}/" /etc/nginx/conf.d/$old_
 [[ "$old_domain" != "$new_domain" ]] && mv /etc/nginx/conf.d/$old_domain.d/$app.conf /etc/nginx/conf.d/$new_domain.d/$app.conf
 
 # Reload nginx
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 rp_reload_web
 
 #=================================================

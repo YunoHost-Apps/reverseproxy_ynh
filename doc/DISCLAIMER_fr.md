@@ -5,3 +5,7 @@ La requête est transmise telle-quelle au serveur backend. Cela veut usuellement
 Pour supporter les URLs relatives depuis le backend, accéder à l'application via `http(s)://example.com/proxy` produit une redirection permanente (302) vers `http(s)://example.com/proxy/` (avec le slash de fin). Sinon, un lien relatif comme `<link rel="stylesheet" href="style.css">` essayerait de charger `http(s)://example.com/style.css`, ce qui échouerait.
 
 Il est possible que votre service backend ne supporte pas de configurer une "base URL" (chemin web personnalisé). Dans ce cas, il faudra installer l'application sur un (sous-)domaine dédié.
+
+### Backend localhost en clair (plaintext)
+
+Les connexions en clair en HTTP au backend ne sont autorisées qu'en localhost sur les adresses 127.X.X.X. Il faudrait aussi supporter 10.X.X.X.

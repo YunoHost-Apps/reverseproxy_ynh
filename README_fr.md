@@ -37,6 +37,10 @@ Pour supporter les URLs relatives depuis le backend, accéder à l'application v
 
 Il est possible que votre service backend ne supporte pas de configurer une "base URL" (chemin web personnalisé). Dans ce cas, il faudra installer l'application sur un (sous-)domaine dédié.
 
+### Backend localhost en clair (plaintext)
+
+Les connexions en clair en HTTP au backend ne sont autorisées qu'en localhost sur les adresses 127.X.X.X. Il faudrait aussi supporter 10.X.X.X.
+
 ## Documentations et ressources
 
 * Site officiel de l'app : <https://en.wikipedia.org/wiki/Reverse_proxy>

@@ -37,6 +37,10 @@ To support relative URLs from the backend, accessing the application via `http(s
 
 It is possible that your backend service does not support setting up a "base URL" (custom web path). In that case, you will have to install the application on a dedicated (sub)domain.
 
+### Plaintext localhost backend
+
+Plaintext HTTP backend is only allowed on localhost. For now, only 127.X.X.X is allowed. 10.X.X.X should also be supported.
+
 ## Documentation and resources
 
 * Official app website: <https://en.wikipedia.org/wiki/Reverse_proxy>

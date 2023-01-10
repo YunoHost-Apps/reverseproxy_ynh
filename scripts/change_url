@@ -39,6 +39,16 @@ path_url="$new_path"
 domain="$old_domain"
 proxy_path="$(ynh_app_setting_get --app=$app --key=proxy_path)"
 assets_path="$(ynh_app_setting_get --app=$app --key=assets_path)"
+
+# Validate reverse proxy destination
+rp_validate_proxy_path
+
+# Validate assets_path
+rp_validate_assets_path
+
+# Special case for "/" path_url
+rp_handle_webroot
+
 ynh_add_nginx_config
 
 # Move file to new domain if domain has changed

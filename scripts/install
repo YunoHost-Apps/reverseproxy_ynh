@@ -26,7 +26,6 @@ domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 proxy_path=$YNH_APP_ARG_PROXY_PATH
 assets_path=$YNH_APP_ARG_ASSETS_PATH
-[[ "$assets_path" = "" ]] && assets_path="/dev/null"
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 #=================================================
@@ -37,7 +36,13 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 # Validate reverse proxy destination
-rp_validate_proxy_path "$proxy_path"
+rp_validate_proxy_path
+
+# Validate assets_path
+rp_validate_assets_path
+
+# Special case for "/" path_url
+rp_handle_webroot
 
 # Save extra settings
 ynh_app_setting_set --app=$app --key=proxy_path --value=$proxy_path

@@ -3,8 +3,6 @@
 #   - plaintext http is only allowed to localhost (to avoid leaking credentials on the network)
 #   - http(s) destination is webroot, no additional component allowed (eg. http://localhost:1234/test is invalid)
 rp_validate_proxy_path() {
-    proxy_path="$1"
-
     if [[ ! $proxy_path =~ '^unix:/' ]]; then
         url_regex='^(http://(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost)|https://.*)(:[0-9]+)?(/.*)?$'
         [[ ! $proxy_path =~ $url_regex ]] && ynh_die \
@@ -23,4 +21,34 @@ rp_validate_proxy_path() {
             fi
         fi
     fi
+}
+
+# Verify that the requested assets path is valid
+#   - is a local folder
+#   - ends with a /
+rp_validate_assets_path() {
+    if [[ "$assets_path" = "" ]]; then
+        assets_path="/dev/null"
+    else
+        if [ ! -d "$assets_path" ]; then
+            ynh_die "Requested assets path "$assets_path" does not exist" 1
+        fi
+
+        if [[ ! "$assets_path" =~ /$ ]]; then
+            # Append missing trailing /
+            assets_path=""${assets_path}"/"
+        fi
+    fi
+}
+
+# When the app is not in the webroot (path_url = /), need to add a redirect block
+# to app/ so relative URLs work
+rp_handle_webroot() {
+	if [[ "$path_url" = "/" ]]; then
+		path_url_slash="/"
+		redirect_block="# Not needed for webroot"
+	else
+		path_url_slash=""$path_url"/"
+		redirect_block="location = "$path_url" { return 302 "$path_url_slash"; }"
+	fi
 }

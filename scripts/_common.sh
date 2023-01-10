@@ -26,9 +26,12 @@ rp_validate_proxy_path() {
 # Verify that the requested assets path is valid
 #   - is a local folder
 #   - ends with a /
+# Sets the alias line for serving static files,
+# and the try_files line for trying those static files first
 rp_validate_assets_path() {
     if [[ "$assets_path" = "" ]]; then
-        assets_path="/dev/null"
+        assets_alias="# No static files to serve"
+        try_files="try_files /dev/null @${app}--proxy;"
     else
         if [ ! -d "$assets_path" ]; then
             ynh_die "Requested assets path "$assets_path" does not exist" 1
@@ -38,17 +41,20 @@ rp_validate_assets_path() {
             # Append missing trailing /
             assets_path=""${assets_path}"/"
         fi
+
+        assets_alias="alias $assets_path;"
+        try_files="try_files \$uri \$uri/ @${app}--proxy;"
     fi
 }
 
 # When the app is not in the webroot (path_url = /), need to add a redirect block
 # to app/ so relative URLs work
 rp_handle_webroot() {
-	if [[ "$path_url" = "/" ]]; then
-		path_url_slash="/"
-		redirect_block="# Not needed for webroot"
-	else
-		path_url_slash=""$path_url"/"
-		redirect_block="location = "$path_url" { return 302 "$path_url_slash"; }"
-	fi
+    if [[ "$path_url" = "/" ]]; then
+        path_url_slash="/"
+        redirect_block="# Not needed for webroot"
+    else
+        path_url_slash=""$path_url"/"
+        redirect_block="location = "$path_url" { return 302 "$path_url_slash"; }"
+    fi
 }

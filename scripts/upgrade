@@ -39,7 +39,13 @@ ynh_abort_if_errors
 #=================================================
 
 # Validate proxy destination
-rp_validate_proxy_path "$proxy_path"
+rp_validate_proxy_path
+
+# Validate assets_path
+rp_validate_assets_path
+
+# Special case for "/" path_url
+rp_handle_webroot
 
 # Configure nginx
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1

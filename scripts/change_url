@@ -39,10 +39,28 @@ path_url="$new_path"
 domain="$old_domain"
 proxy_path="$(ynh_app_setting_get --app=$app --key=proxy_path)"
 assets_path="$(ynh_app_setting_get --app=$app --key=assets_path)"
+
+# Validate reverse proxy destination
+rp_validate_proxy_path
+
+# Validate assets_path
+rp_validate_assets_path
+
+# Special case for "/" path_url
+rp_handle_webroot
+
+nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
+
+ynh_backup_if_checksum_is_different --file="$nginx_conf_path"
 ynh_add_nginx_config
 
 # Move file to new domain if domain has changed
-[[ "$old_domain" != "$new_domain" ]] && mv /etc/nginx/conf.d/$old_domain.d/$app.conf /etc/nginx/conf.d/$new_domain.d/$app.conf
+if [[ "$old_domain" != "$new_domain" ]]; then
+    new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
+    ynh_delete_file_checksum --file="$nginx_conf_path"
+    mv $nginx_conf_path $new_nginx_conf_path
+    ynh_store_file_checksum --file="$new_nginx_conf_path"
+fi
 
 
 #=================================================

@@ -3,7 +3,7 @@
 #   - plaintext http is only allowed to localhost (to avoid leaking credentials on the network)
 #   - http(s) destination is webroot, no additional component allowed (eg. http://localhost:1234/test is invalid)
 rp_validate_proxy_path() {
-    if [[ ! $proxy_path =~ '^unix:/' ]]; then
+    if [[ ! $proxy_path =~ ^'unix:/' ]]; then
         url_regex='^(http://(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost)|https://.*)(:[0-9]+)?(/.*)?$'
         [[ ! $proxy_path =~ $url_regex ]] && ynh_die \
         "For secure reason, you can't use an unencrypted http remote destination couple with ssowat for your reverse proxy: $proxy_path" 1

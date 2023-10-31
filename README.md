@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # Reverse Proxy for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/reverseproxy.svg)](https://dash.yunohost.org/appci/app/reverseproxy) ![Working status](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/reverseproxy.svg)](https://dash.yunohost.org/appci/app/reverseproxy) ![Working status](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
+
 [![Install Reverse Proxy with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=reverseproxy)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -26,7 +27,7 @@ The supported backends are:
 Please be aware that SSOWat sends user credentials in plaintext to the backend, so do not use this application to reverse-proxy a service you don't trust (for example to mirror a site hosted by someone else).
 
 
-**Shipped version:** 0.1~ynh1
+**Shipped version:** 0.2~ynh1
 ## Disclaimers / important information
 
 ### Backend web path
@@ -44,7 +45,7 @@ Plaintext HTTP backend is only allowed on localhost. For now, only 127.X.X.X is 
 ## Documentation and resources
 
 * Official app website: <https://en.wikipedia.org/wiki/Reverse_proxy>
-* YunoHost documentation for this app: <https://yunohost.org/app_reverseproxy>
+* YunoHost Store: <https://apps.yunohost.org/app/reverseproxy>
 * Report a bug: <https://github.com/YunoHost-Apps/reverseproxy_ynh/issues>
 
 ## Developer info

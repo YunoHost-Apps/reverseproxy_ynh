@@ -6,7 +6,7 @@
         "en": "Create a reverse proxy to a socket/port, optionally serve static files from folder",
         "fr": "Créer un reverse proxy vers un socket/port, optionnellement servir des fichiers statiques depuis un dossier"
     },
-    "version": "0.2~ynh1",
+    "version": "0.2~ynh2",
     "license": "AGPL-3.0-or-later",
     "url": "https://en.wikipedia.org/wiki/Reverse_proxy",
     "upstream": {

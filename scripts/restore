@@ -14,18 +14,18 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # LOAD SETTINGS
 #=================================================
 
 # Retrieve arguments
-app=$YNH_APP_INSTANCE_NAME
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
-assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
+#REMOVEME? assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
 
 #=================================================
 # REVERSEPROXY_YNH

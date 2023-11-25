@@ -11,30 +11,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-
-# Retrieve arguments
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
-#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
-#REMOVEME? proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
-#REMOVEME? assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-
-# Backup the current version of the app
-#REMOVEME? ynh_backup_before_upgrade
-#REMOVEME? ynh_clean_setup () {
-	# restore it if the upgrade fails
-#REMOVEME? 	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-#REMOVEME? ynh_abort_if_errors
-
-#=================================================
 # REVERSEPROXY_YNH
 #=================================================
 
@@ -49,7 +25,7 @@ rp_handle_webroot
 
 # Configure nginx
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
+
 ynh_add_nginx_config
 
 #=================================================

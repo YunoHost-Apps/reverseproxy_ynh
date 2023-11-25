@@ -8,26 +8,6 @@
 
 source /usr/share/yunohost/helpers
 source _common.sh
-
-#=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-#REMOVEME? ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-#REMOVEME? app=$YNH_APP_INSTANCE_NAME
-#REMOVEME? old_domain=$YNH_APP_OLD_DOMAIN
-#REMOVEME? new_domain=$YNH_APP_NEW_DOMAIN
-#REMOVEME? old_path=$YNH_APP_OLD_PATH
-#REMOVEME? new_path=$YNH_APP_NEW_PATH
-
-# Path availability is already checked for
-
 #=================================================
 # REVERSEPROXY_YNH
 #=================================================

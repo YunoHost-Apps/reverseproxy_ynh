@@ -14,11 +14,9 @@ source _common.sh
 
 # Nginx configuration
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
+
 path="$new_path"
 domain="$old_domain"
-#REMOVEME? proxy_path="$(ynh_app_setting_get --app=$app --key=proxy_path)"
-#REMOVEME? assets_path="$(ynh_app_setting_get --app=$app --key=assets_path)"
 
 # Validate reverse proxy destination
 rp_validate_proxy_path
@@ -29,17 +27,17 @@ rp_validate_assets_path
 # Special case for "/" path
 rp_handle_webroot
 
-#REMOVEME? nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
+nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
 
-#REMOVEME? ynh_backup_if_checksum_is_different --file="$nginx_conf_path"
-#REMOVEME? ynh_add_nginx_config
+ynh_backup_if_checksum_is_different --file="$nginx_conf_path"
+ynh_add_nginx_config
 
 # Move file to new domain if domain has changed
-#REMOVEME? if [[ "$old_domain" != "$new_domain" ]]; then
-#REMOVEME?     new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
-#REMOVEME?     ynh_delete_file_checksum --file="$nginx_conf_path"
-#REMOVEME?     mv $nginx_conf_path $new_nginx_conf_path
-#REMOVEME?     ynh_store_file_checksum --file="$new_nginx_conf_path"
+if [[ "$old_domain" != "$new_domain" ]]; then
+	new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
+	ynh_delete_file_checksum --file="$nginx_conf_path"
+	mv $nginx_conf_path $new_nginx_conf_path
+	ynh_store_file_checksum --file="$new_nginx_conf_path"
 fi
 
 

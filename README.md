@@ -28,7 +28,6 @@ Please be aware that SSOWat sends user credentials in plaintext to the backend, 
 
 
 **Shipped version:** 0.2~ynh1
-
 ## Documentation and resources
 
 * Official app website: <https://en.wikipedia.org/wiki/Reverse_proxy>

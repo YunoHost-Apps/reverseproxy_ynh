@@ -28,6 +28,7 @@ Attention, SSOWat envoie les identifiants des utilisateurices en clair jusqu'au 
 
 
 **Version incluse :** 0.2~ynh1
+
 ## Documentations et ressources
 
 * Site officiel de l’app : <https://en.wikipedia.org/wiki/Reverse_proxy>

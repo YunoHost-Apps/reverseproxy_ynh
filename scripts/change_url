@@ -8,37 +8,15 @@
 
 source /usr/share/yunohost/helpers
 source _common.sh
-
-#=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-app=$YNH_APP_INSTANCE_NAME
-old_domain=$YNH_APP_OLD_DOMAIN
-new_domain=$YNH_APP_NEW_DOMAIN
-old_path=$YNH_APP_OLD_PATH
-new_path=$YNH_APP_NEW_PATH
-
-# Path availability is already checked for
-
 #=================================================
 # REVERSEPROXY_YNH
 #=================================================
 
 # Nginx configuration
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-path_url="$new_path"
+
+path="$new_path"
 domain="$old_domain"
-proxy_path="$(ynh_app_setting_get --app=$app --key=proxy_path)"
-assets_path="$(ynh_app_setting_get --app=$app --key=assets_path)"
 
 # Validate reverse proxy destination
 rp_validate_proxy_path
@@ -46,7 +24,7 @@ rp_validate_proxy_path
 # Validate assets_path
 rp_validate_assets_path
 
-# Special case for "/" path_url
+# Special case for "/" path
 rp_handle_webroot
 
 nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
@@ -56,10 +34,10 @@ ynh_add_nginx_config
 
 # Move file to new domain if domain has changed
 if [[ "$old_domain" != "$new_domain" ]]; then
-    new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
-    ynh_delete_file_checksum --file="$nginx_conf_path"
-    mv $nginx_conf_path $new_nginx_conf_path
-    ynh_store_file_checksum --file="$new_nginx_conf_path"
+	new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
+	ynh_delete_file_checksum --file="$nginx_conf_path"
+	mv $nginx_conf_path $new_nginx_conf_path
+	ynh_store_file_checksum --file="$new_nginx_conf_path"
 fi
 
 

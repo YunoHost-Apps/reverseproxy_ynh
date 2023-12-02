@@ -1,0 +1,58 @@
+packaging_format = 2
+
+id = "reverseproxy"
+name = "Reverse Proxy"
+description.en = "Create a reverse proxy to a socket/port, optionally serve static files from folder"
+description.fr = "Créer un reverse proxy vers un socket/port, optionnellement servir des fichiers statiques depuis un dossier"
+
+version = "0.2~ynh1"
+
+maintainers = ["selfhoster1312"]
+
+[upstream]
+license = "AGPL-3.0-or-later"
+website = "https://en.wikipedia.org/wiki/Reverse_proxy"
+
+[integration]
+yunohost = ">= 11.2"
+architectures = "all"
+multi_instance = true
+
+ldap = "not_relevant"
+
+sso = "not_relevant"
+
+disk = "50M"
+ram.build = "90M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+
+    [install.proxy_path]
+    ask.en = "Redirect destination path (unix:/file for socket)"
+    ask.fr = "Emplacement de destination (unix:/fichier pour socket)"
+    type = "string"
+    example = "http://127.0.0.1:8080"
+
+    [install.init_main_permission]
+    type = "group"
+
+    [install.assets_path]
+    ask.en = "Static assets folder"
+    ask.fr = "Dossier pour les fichiers statiques"
+    type = "string"
+    optional = true
+    example = "/opt/foo/www/"
+
+[resources]
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"

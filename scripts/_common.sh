@@ -47,14 +47,14 @@ rp_validate_assets_path() {
     fi
 }
 
-# When the app is not in the webroot (path_url = /), need to add a redirect block
+# When the app is not in the webroot (path = /), need to add a redirect block
 # to app/ so relative URLs work
 rp_handle_webroot() {
-    if [[ "$path_url" = "/" ]]; then
-        path_url_slash="/"
+    if [[ "$path" = "/" ]]; then
+        path_slash="/"
         redirect_block="# Not needed for webroot"
     else
-        path_url_slash=""$path_url"/"
-        redirect_block="location = "$path_url" { return 302 "$path_url_slash"; }"
+        path_slash=""$path"/"
+        redirect_block="location = "$path" { return 302 "$path_slash"; }"
     fi
 }

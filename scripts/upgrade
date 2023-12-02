@@ -11,30 +11,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-
-# Retrieve arguments
-app=$YNH_APP_INSTANCE_NAME
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-proxy_path=$(ynh_app_setting_get --app=$app --key=proxy_path)
-assets_path=$(ynh_app_setting_get --app=$app --key=assets_path)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
 # REVERSEPROXY_YNH
 #=================================================
 
@@ -44,12 +20,12 @@ rp_validate_proxy_path
 # Validate assets_path
 rp_validate_assets_path
 
-# Special case for "/" path_url
+# Special case for "/" path
 rp_handle_webroot
 
 # Configure nginx
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+
 ynh_add_nginx_config
 
 #=================================================

@@ -10,30 +10,8 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-# Retrieve arguments
-app=$YNH_APP_INSTANCE_NAME
-domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
-proxy_path=$YNH_APP_ARG_PROXY_PATH
-assets_path=$YNH_APP_ARG_ASSETS_PATH
-is_public=$YNH_APP_ARG_IS_PUBLIC
-
-#=================================================
 # REVERSEPROXY_YNH
 #=================================================
-
-# Check domain/path availability
-ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 # Validate reverse proxy destination
 rp_validate_proxy_path
@@ -41,23 +19,13 @@ rp_validate_proxy_path
 # Validate assets_path
 rp_validate_assets_path
 
-# Special case for "/" path_url
+# Special case for "/" path
 rp_handle_webroot
-
-# Save extra settings
-ynh_app_setting_set --app=$app --key=proxy_path --value=$proxy_path
-ynh_app_setting_set --app=$app --key=assets_path --value=$assets_path
 
 # Configure nginx
 ynh_script_progression --message="Configuring NGINX web server..." --weight=1
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-ynh_add_nginx_config
 
-# Make app public if necessary (yunohost setting boolean is 1 when true)
-ynh_script_progression --message="Configuring permissions..." --weight=2
-if [ $is_public -eq 1 ]; then
-    ynh_permission_update --permission="main" --add="visitors"
-fi
+ynh_add_nginx_config
 
 #=================================================
 # END OF SCRIPT

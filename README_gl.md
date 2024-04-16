@@ -27,7 +27,7 @@ The supported backends are:
 Please be aware that SSOWat sends user credentials in plaintext to the backend, so do not use this application to reverse-proxy a service you don't trust (for example to mirror a site hosted by someone else).
 
 
-**Versión proporcionada:** 0.2~ynh1
+**Versión proporcionada:** 0.2~ynh2
 ## Documentación e recursos
 
 - Web oficial da app: <https://en.wikipedia.org/wiki/Reverse_proxy>

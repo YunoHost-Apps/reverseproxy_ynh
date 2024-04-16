@@ -9,7 +9,7 @@ It shall NOT be edited by hand.
 
 [![Install Reverse Proxy with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=reverseproxy)
 
-*[Read this README is other languages.](./ALL_README.md)*
+*[Read this README in other languages.](./ALL_README.md)*
 
 > *This package allows you to install Reverse Proxy quickly and simply on a YunoHost server.*  
 > *If you don't have YunoHost, please consult [the guide](https://yunohost.org/install) to learn how to install it.*
@@ -27,7 +27,7 @@ The supported backends are:
 Please be aware that SSOWat sends user credentials in plaintext to the backend, so do not use this application to reverse-proxy a service you don't trust (for example to mirror a site hosted by someone else).
 
 
-**Shipped version:** 0.2~ynh1
+**Shipped version:** 0.2~ynh2
 ## Documentation and resources
 
 - Official app website: <https://en.wikipedia.org/wiki/Reverse_proxy>

@@ -27,7 +27,7 @@ Les backends supportés sont:
 Attention, SSOWat envoie les identifiants des utilisateurices en clair jusqu'au backend, donc n'utilisez pas cette application pour reverse-proxy un service dans lequel vous n'avez pas confiance (par exemple pour mirrorer un site hébergé par une autre personne).
 
 
-**Version incluse :** 0.2~ynh1
+**Version incluse :** 0.2~ynh2
 ## Documentations et ressources
 
 - Site officiel de l’app : <https://en.wikipedia.org/wiki/Reverse_proxy>

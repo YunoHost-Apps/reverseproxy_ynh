@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 Reverse Proxy
+# YunoHost 上的 Reverse Proxy
 
 [![集成程度](https://dash.yunohost.org/integration/reverseproxy.svg)](https://dash.yunohost.org/appci/app/reverseproxy) ![工作状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
 

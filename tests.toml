@@ -1,7 +1,16 @@
 test_format = 1.0
 
 [default]
-
-
+		args.path = "/"
 		args.proxy_path="http://127.0.0.1:6787"
 		args.assets_path="/usr/share/yunohost/admin"
+
+[default.curl_tests]
+    # If needed, we can add a preinstall step, as shown here:
+		# https://github.com/YunoHost/package_check
+		
+		#admin.path = "/"
+		admin.expect_title = "YunoHost Admin"
+
+		admin_css.path = "/assets/UserCreate-18b2103e.css"
+		admin_css.expect_content = ".custom-select[data-v-0d75331f]{flex-basis:40%}"

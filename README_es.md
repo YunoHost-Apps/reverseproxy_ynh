@@ -5,7 +5,7 @@ No se debe editar a mano.
 
 # Reverse Proxy para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/reverseproxy.svg)](https://dash.yunohost.org/appci/app/reverseproxy) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/reverseproxy.svg)](https://ci-apps.yunohost.org/ci/apps/reverseproxy/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
 
 [![Instalar Reverse Proxy con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=reverseproxy)
 

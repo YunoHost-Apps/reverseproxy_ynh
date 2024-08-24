@@ -5,7 +5,7 @@
 
 # YunoHost 上的 Reverse Proxy
 
-[![集成程度](https://dash.yunohost.org/integration/reverseproxy.svg)](https://dash.yunohost.org/appci/app/reverseproxy) ![工作状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/reverseproxy.svg)](https://ci-apps.yunohost.org/ci/apps/reverseproxy/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/reverseproxy.maintain.svg)
 
 [![使用 YunoHost 安装 Reverse Proxy](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=reverseproxy)
 

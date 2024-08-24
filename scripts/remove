@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 # Remove configuration files
-ynh_secure_remove /etc/nginx/conf.d/$domain.d/$app.conf
+ynh_secure_remove "/etc/nginx/conf.d/${domain}.d/${app}.conf"
 
 #=================================================
 # END OF SCRIPT

@@ -36,7 +36,7 @@ ynh_add_nginx_config
 if [[ "$old_domain" != "$new_domain" ]]; then
 	new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
 	ynh_delete_file_checksum --file="$nginx_conf_path"
-	mv $nginx_conf_path $new_nginx_conf_path
+	mv "${nginx_conf_path}" "${new_nginx_conf_path}"
 	ynh_store_file_checksum --file="$new_nginx_conf_path"
 fi
 

@@ -38,12 +38,12 @@ rp_validate_assets_path() {
         try_files="try_files /dev/null @${app}--proxy;"
     else
         if [ ! -d "$assets_path" ]; then
-            ynh_die "Requested assets path "$assets_path" does not exist" 1
+            ynh_die "Requested assets path ${assets_path} does not exist" 1
         fi
 
         if [[ ! "$assets_path" =~ /$ ]]; then
             # Append missing trailing /
-            assets_path=""${assets_path}"/"
+            assets_path="${assets_path}/"
         fi
 
         assets_alias="alias $assets_path;"
@@ -58,7 +58,7 @@ rp_handle_webroot() {
         path_slash="/"
         redirect_block="# Not needed for webroot"
     else
-        path_slash=""$path"/"
-        redirect_block="location = "$path" { return 302 "$path_slash"; }"
+        path_slash="$path"/
+        redirect_block="location = ${path} { return 302 ${path_slash}; }"
     fi
 }

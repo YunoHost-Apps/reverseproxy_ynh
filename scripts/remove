@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -14,10 +8,10 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 # Remove configuration files
-ynh_secure_remove "/etc/nginx/conf.d/${domain}.d/${app}.conf"
+ynh_safe_rm /etc/nginx/conf.d/$domain.d/$app.conf
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Removal of $app completed" --last
+ynh_script_progression "Removal of $app completed"

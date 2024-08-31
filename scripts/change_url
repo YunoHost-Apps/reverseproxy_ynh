@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source /usr/share/yunohost/helpers
 source _common.sh
 #=================================================
@@ -13,7 +7,7 @@ source _common.sh
 #=================================================
 
 # Nginx configuration
-ynh_script_progression --message="Configuring NGINX web server..." --weight=1
+ynh_script_progression "Configuring NGINX web server..."
 
 path="$new_path"
 domain="$old_domain"
@@ -29,20 +23,19 @@ rp_handle_webroot
 
 nginx_conf_path=/etc/nginx/conf.d/$old_domain.d/$app.conf
 
-ynh_backup_if_checksum_is_different --file="$nginx_conf_path"
-ynh_add_nginx_config
+ynh_backup_if_checksum_is_different "$nginx_conf_path"
+ynh_config_add_nginx
 
 # Move file to new domain if domain has changed
 if [[ "$old_domain" != "$new_domain" ]]; then
 	new_nginx_conf_path=/etc/nginx/conf.d/$new_domain.d/$app.conf
-	ynh_delete_file_checksum --file="$nginx_conf_path"
-	mv "${nginx_conf_path}" "${new_nginx_conf_path}"
-	ynh_store_file_checksum --file="$new_nginx_conf_path"
+	ynh_delete_file_checksum "$nginx_conf_path"
+	mv $nginx_conf_path $new_nginx_conf_path
+	ynh_store_file_checksum "$new_nginx_conf_path"
 fi
-
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Changing URL of $app completed" --last
+ynh_script_progression "Changing URL of $app completed"

@@ -1,6 +1,6 @@
 ### Backend web path
 
-The request is transmitted as-is to the backend server. This usually means that the backend service shoudl be aware of the web path used to access the service. For example, if using the application is installed to `__DOMAIN__/proxy`, your backend application should produce absolute links starting with `__DOMAIN__/proxy/` too.
+The request is transmitted as-is to the backend server. This usually means that the backend service should be aware of the web path used to access the service. For example, if the application is installed to `__DOMAIN__/proxy`, your backend application should produce absolute links starting with `__DOMAIN__/proxy/` too.
 
 To support relative URLs from the backend, accessing the application via `http(s)://__DOMAIN__/proxy` will permanent redirect (302) to `http(s)://__DOMAIN__/proxy/` (trailing slash). Otherwise, a relative link like `<link rel="stylesheet" href="style.css">` would try to load `http(s)://__DOMAIN__/style.css` which would fail.
 

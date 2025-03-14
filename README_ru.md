@@ -16,16 +16,15 @@
 
 ## Обзор
 
-This application allows to configure a HTTP(S) reverse proxy to serve another web service, as well as an (optional) static assets directory to serve directly from nginx. The application appears as a tile in the SSOWat panel, unless configured otherwise after install. The access to the application can be made public.
+Это приложение позволяет настроить обратный прокси-сервер HTTP(S) для обслуживания другой веб-службы, а также (необязательный) каталог статических ресурсов для работы непосредственно из nginx. Приложение отображается в виде плитки на панели управления, если после установки не настроено иначе. Доступ к приложению может быть общедоступным.
 
-The supported backends are:
+Поддерживаемые серверные части:
 
-- plaintext HTTP to localhost (127.x.x.x)
-- HTTPS to any destination
-- socket file on local disk
+- обычный текстовый запрос HTTP на localhost (127.x.x.x)
+- HTTPS в любом направлении
+- файл сокета на локальном диске
 
-Please be aware that SSOWat sends user credentials in plaintext to the backend, so do not use this application to reverse-proxy a service you don't trust (for example to mirror a site hosted by someone else).
-
+Пожалуйста, имейте в виду, что SSOWat отправляет учетные данные пользователя в виде открытого текста серверной части, поэтому не используйте это приложение для обратного прокси-сервера сервиса, которому вы не доверяете (например, для зеркального отображения сайта, размещенного кем-то другим).
 
 **Поставляемая версия:** 0.2~ynh2
 ## Документация и ресурсы

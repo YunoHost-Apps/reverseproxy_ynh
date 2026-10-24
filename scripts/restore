@@ -16,6 +16,7 @@ NGINX_CONF="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 
 # Restore configuration files
 ynh_restore "$NGINX_CONF"
+ynh_restore "/etc/nginx/conf.d/${domain}.d/${app}.d"
 
 # Reload nginx
 ynh_script_progression "Reloading NGINX web server..."

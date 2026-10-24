@@ -9,6 +9,7 @@ source /usr/share/yunohost/helpers
 
 # Remove configuration files
 ynh_safe_rm /etc/nginx/conf.d/$domain.d/$app.conf
+ynh_safe_rm /etc/nginx/conf.d/$domain.d/$app.d
 
 #=================================================
 # END OF SCRIPT

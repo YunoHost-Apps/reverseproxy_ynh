@@ -6,6 +6,10 @@ To support relative URLs from the backend, accessing the application via `http(s
 
 It is possible that your backend service does not support setting up a "base URL" (custom web path). In that case, you will have to install the application on a dedicated (sub)domain.
 
+### Custom NGINX directives
+
+To add your own NGINX directives to the proxy (for example `client_max_body_size 0;`, `proxy_read_timeout 300s;` or `proxy_buffering off;`), put them in a `.conf` file in `/etc/nginx/conf.d/__DOMAIN__.d/__APP__.d/`, check them with `nginx -t` and reload NGINX. They are kept on upgrade and included both in the location of the app and in the one that proxies the requests, so they must be plain directives valid in both (no `location` block, no `alias`). Do not redefine the directives already set by the app, such as `proxy_pass`. An invalid file prevents the app from being upgraded or restored.
+
 ### Plaintext localhost backend
 
 Plaintext HTTP backend is only allowed on localhost. For now, only 127.X.X.X is allowed. 10.X.X.X should also be supported.

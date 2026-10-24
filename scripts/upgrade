@@ -15,6 +15,7 @@ rp_validate_assets_path
 
 # Special case for "/" path
 rp_handle_webroot
+rp_custom_conf_dir
 
 # Configure nginx
 ynh_script_progression "Configuring NGINX web server..."

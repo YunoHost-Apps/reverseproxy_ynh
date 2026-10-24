@@ -62,3 +62,10 @@ rp_handle_webroot() {
         redirect_block="location = ${path} { return 302 ${path_slash}; }"
     fi
 }
+
+# Folder for the admin's own NGINX directives, included in the app's locations
+# and kept on upgrade: /etc/nginx/conf.d/<domain>.d/<app>.d/*.conf
+rp_custom_conf_dir() {
+    custom_conf_dir="/etc/nginx/conf.d/${1:-$domain}.d/$app.d"
+    mkdir -p "$custom_conf_dir"
+}

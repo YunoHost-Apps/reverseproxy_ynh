@@ -9,6 +9,9 @@ source /usr/share/yunohost/helpers
 
 # Copy the conf files
 ynh_backup "/etc/nginx/conf.d/${domain}.d/${app}.conf"
+# Created if the admin removed it, restore expects it in the archive
+rp_custom_conf_dir
+ynh_backup "$custom_conf_dir"
 
 #=================================================
 # END OF SCRIPT

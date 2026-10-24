@@ -6,6 +6,10 @@ Pour supporter les URLs relatives depuis le backend, accéder à l'application v
 
 Il est possible que votre service backend ne supporte pas de configurer une "base URL" (chemin web personnalisé). Dans ce cas, il faudra installer l'application sur un (sous-)domaine dédié.
 
+### Directives NGINX personnalisées
+
+Pour ajouter vos propres directives NGINX au proxy (par exemple `client_max_body_size 0;`, `proxy_read_timeout 300s;` ou `proxy_buffering off;`), placez-les dans un fichier `.conf` du dossier `/etc/nginx/conf.d/__DOMAIN__.d/__APP__.d/`, vérifiez-les avec `nginx -t` et rechargez NGINX. Elles sont conservées lors des mises à jour et incluses à la fois dans le bloc de l'application et dans celui qui transmet les requêtes : ce doivent donc être de simples directives valides dans les deux (pas de bloc `location`, pas d'`alias`). Ne redéfinissez pas les directives déjà posées par l'application, comme `proxy_pass`. Un fichier invalide empêche la mise à jour ou la restauration de l'application.
+
 ### Backend localhost en clair (plaintext)
 
 Les connexions en clair en HTTP au backend ne sont autorisées qu'en localhost sur les adresses 127.X.X.X. Il faudrait aussi supporter 10.X.X.X.

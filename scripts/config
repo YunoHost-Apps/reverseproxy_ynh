@@ -1,0 +1,76 @@
+#!/bin/bash
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# SPECIFIC VALIDATORS FOR TOML SHORT KEYS
+#=================================================
+
+# Prints why a value is refused, without the side effects of ynh_die
+rp_validation_error() {
+    local error
+    error="$( ({ set +o xtrace; } 2> /dev/null; YNH_STDRETURN=/dev/null "$@") 2>&1 > /dev/null)" \
+        || echo "${error//\"/\'}"
+}
+
+validate__proxy_path() {
+    rp_validation_error rp_validate_proxy_path
+}
+
+# Passing the password may not be allowed with the current destination
+validate__sso_auth() {
+    rp_validation_error rp_validate_proxy_path
+}
+
+validate__assets_path() {
+    rp_validation_error rp_validate_assets_path
+}
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+
+ynh_app_config_apply() {
+    local nginx_conf="/etc/nginx/conf.d/$domain.d/$app.conf"
+    local checksum_key="checksum_${nginx_conf//[\/ ]/_}"
+    local previous_checksum
+    previous_checksum="$(ynh_app_setting_get --key="$checksum_key")"
+    local previous_conf
+    previous_conf="$(mktemp)"
+    cp -a "$nginx_conf" "$previous_conf"
+    local previous_sso_auth="${old[sso_auth]:-$sso_auth}"
+
+    _ynh_app_config_apply
+
+    # Until NGINX uses the new destination, pass the lesser of the old and new choices
+    local new_sso_auth="$sso_auth"
+    if [ "$(rp_sso_auth_level "$previous_sso_auth")" -lt "$(rp_sso_auth_level "$sso_auth")" ]; then
+        sso_auth="$previous_sso_auth"
+    fi
+    rp_apply_sso_auth
+    sso_auth="$new_sso_auth"
+
+    # In the background, so that errexit applies
+    (rp_validate_proxy_path; rp_validate_assets_path; rp_handle_webroot; ynh_config_add_nginx) &
+    if ! wait $! || ! nginx -t > /dev/null 2>&1; then
+        local reason
+        reason="$(nginx -t 2>&1 | grep -m1 'emerg' | sed 's/^.*\[emerg\] [0-9#]*: //')"
+        cp -a "$previous_conf" "$nginx_conf"
+        ynh_safe_rm "$previous_conf"
+        local key
+        for key in "${!old[@]}"; do
+            ynh_app_setting_set --key="$key" --value="${old[$key]}"
+        done
+        ynh_app_setting_set --key="$checksum_key" --value="$previous_checksum"
+        sso_auth="$previous_sso_auth"
+        rp_apply_sso_auth
+        ynh_systemctl --service=nginx --action=reload || true
+        ynh_die "The new configuration could not be applied, the previous one is kept${reason:+: $reason}"
+    fi
+    ynh_safe_rm "$previous_conf"
+
+    rp_apply_sso_auth
+}
+
+ynh_app_config_run "$1"

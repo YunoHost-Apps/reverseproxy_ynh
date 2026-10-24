@@ -7,6 +7,8 @@ source /usr/share/yunohost/helpers
 # REVERSEPROXY_YNH
 #=================================================
 
+rp_init_sso_auth
+
 # Validate proxy destination
 rp_validate_proxy_path
 
@@ -15,6 +17,8 @@ rp_validate_assets_path
 
 # Special case for "/" path
 rp_handle_webroot
+
+rp_apply_sso_auth
 
 # Configure nginx
 ynh_script_progression "Configuring NGINX web server..."

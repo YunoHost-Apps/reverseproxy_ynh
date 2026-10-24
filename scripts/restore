@@ -7,12 +7,16 @@ source /usr/share/yunohost/helpers
 # REVERSEPROXY_YNH
 #=================================================
 
+rp_init_sso_auth
+
 # Revalidate destination path
 rp_validate_proxy_path "$proxy_path"
 
 # Check configuration files
 NGINX_CONF="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 [[ -f $NGINX_CONF ]] && ynh_die "The NGINX configuration already exists at '${NGINX_CONF}'. You should safely delete it before restoring this app."
+
+rp_apply_sso_auth
 
 # Restore configuration files
 ynh_restore "$NGINX_CONF"

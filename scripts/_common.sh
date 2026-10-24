@@ -1,16 +1,22 @@
+# Characters that would break the generated NGINX configuration
+rp_forbidden_chars='[[:space:];{}"\]'
+
 # Verify that the requested reverse proxy destination is valid:
 #   - protocol is http(s):// or unix: for socket file
-#   - plaintext http is only allowed to localhost (to avoid leaking credentials on the network)
+#   - plaintext http to another machine is only allowed when the users' password is not passed (to avoid leaking credentials on the network)
 #   - http(s) destination is webroot, no additional component allowed (eg. http://localhost:1234/test is invalid)
 rp_validate_proxy_path() {
+    [[ "$proxy_path" =~ $rp_forbidden_chars ]] && ynh_die "The destination cannot contain spaces, semicolons, braces, backslashes or double quotes"
     if [[ "$proxy_path" == unix:/* ]]; then
         # Final nginx config is http://unix:/path/to.socket
         proxy_path="http://$proxy_path"
     elif [[ ! "$proxy_path" == http://unix:/* ]]; then
-        # Not unix domain socket... check URL is localhost
-        url_regex='^(http://(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost)|https://.*)(:[0-9]+)?(/.*)?$'
-        [[ ! "$proxy_path" =~ $url_regex ]] && ynh_die \
-        "For secure reason, you can't use an unencrypted http remote destination couple with ssowat for your reverse proxy: $proxy_path" 1
+        local local_regex='^(http://(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost)|https://.*)(:[0-9]+)?(/.*)?$'
+        if [[ ! "$proxy_path" =~ $local_regex ]]; then
+            [[ "$proxy_path" =~ ^http:// ]] || ynh_die "The destination must start with http://, https:// or unix:"
+            [[ "${sso_auth:-}" == "none" || "${sso_auth:-}" == "username" ]] || ynh_die \
+            "Plain HTTP to another machine would send the users' password unencrypted on the network: pass only their identity, or nothing, to the app"
+        fi
 
         # Don't allow trailing slash or additional URI components in proxy_path if not unix domain socket
         if [[ "$proxy_path" =~ ^https?:// ]]; then
@@ -37,6 +43,7 @@ rp_validate_assets_path() {
         assets_alias="# No static files to serve"
         try_files="try_files /dev/null @${app}--proxy;"
     else
+        [[ "$assets_path" =~ $rp_forbidden_chars ]] && ynh_die "The static assets folder cannot contain spaces, semicolons, braces, backslashes or double quotes"
         if [ ! -d "$assets_path" ]; then
             ynh_die "Requested assets path ${assets_path} does not exist" 1
         fi
@@ -61,4 +68,54 @@ rp_handle_webroot() {
         path_slash="$path"/
         redirect_block="location = ${path} { return 302 ${path_slash}; }"
     fi
+}
+
+# Installs made before the sso_auth setting keep what they had
+rp_init_sso_auth() {
+    if [ -z "${sso_auth:-}" ]; then
+        if [ "$(ynh_app_setting_get --key=auth_header)" == "basic-without-password" ]; then
+            sso_auth="username"
+        else
+            sso_auth="username_and_password"
+        fi
+        ynh_app_setting_set --key=sso_auth --value="$sso_auth"
+    fi
+}
+
+rp_validate_sso_auth() {
+    case "${sso_auth:-}" in
+        username_and_password | username | none) ;;
+        *) ynh_die "Unknown value for sso_auth: ${sso_auth:-}" ;;
+    esac
+}
+
+# How much of the user's credentials a sso_auth value passes to the app
+rp_sso_auth_level() {
+    case "$1" in
+        none) echo 0 ;;
+        username) echo 1 ;;
+        *) echo 2 ;;
+    esac
+}
+
+# What SSOwat passes to the app for users logged in on the portal. Applied on
+# every upgrade and restore, since the permission resource resets it.
+# auth_header is set even for none: if the permission flag is turned back on
+# and the setting is missing, SSOwat passes the password.
+rp_apply_sso_auth() {
+    rp_validate_sso_auth
+    case "$sso_auth" in
+        none)
+            ynh_app_setting_set --key=auth_header --value="basic-without-password"
+            ynh_permission_url --permission="main" --auth_header=false
+            ;;
+        username)
+            ynh_app_setting_set --key=auth_header --value="basic-without-password"
+            ynh_permission_url --permission="main" --auth_header=true
+            ;;
+        username_and_password)
+            ynh_app_setting_set --key=auth_header --value="basic-with-password"
+            ynh_permission_url --permission="main" --auth_header=true
+            ;;
+    esac
 }

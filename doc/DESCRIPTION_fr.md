@@ -2,8 +2,8 @@ Cette application permet de configurer un reverse proxy HTTP(S) pour servir un a
 
 Les backends supportés sont:
 
-- HTTP en clair (plaintext) vers localhost (127.x.x.x)
+- HTTP en clair (plaintext) vers localhost (127.x.x.x), ou vers une autre machine si le mot de passe n'est pas transmis
 - HTTPS vers n'importe quelle destination
 - fichier socket sur disque local
 
-Attention, SSOWat envoie les identifiants des utilisateurices en clair jusqu'au backend, donc n'utilisez pas cette application pour reverse-proxy un service dans lequel vous n'avez pas confiance (par exemple pour mirrorer un site hébergé par une autre personne).
+Par défaut, SSOWat transmet les identifiants des utilisateurices au backend. On peut limiter cela à leur identité, ou le désactiver, à l'installation ou dans le panneau de configuration. Même dans ce cas, n'utilisez pas cette application pour reverse-proxy un service dans lequel vous n'avez pas confiance (par exemple pour mirrorer un site hébergé par une autre personne) : ses pages tournent dans le même domaine que vos autres applications.

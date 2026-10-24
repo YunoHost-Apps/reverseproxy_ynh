@@ -5,7 +5,7 @@ name = "Reverse Proxy"
 description.en = "Create a reverse proxy to a socket/port, optionally serve static files from folder"
 description.fr = "Créer un reverse proxy vers un socket/port, optionnellement servir des fichiers statiques depuis un dossier"
 
-version = "0.2~ynh2"
+version = "0.2~ynh3"
 
 maintainers = ["selfhoster1312"]
 
@@ -43,6 +43,17 @@ ram.runtime = "50M"
     [install.init_main_permission]
     type = "group"
 
+    [install.sso_auth]
+    ask.en = "Authentication passed to the app for users logged in on the YunoHost portal"
+    ask.fr = "Authentification transmise à l'application pour les utilisateurs connectés au portail YunoHost"
+    help.en = "The identity is the username, email and full name. With a plain HTTP destination on another machine, the password cannot be passed."
+    help.fr = "L'identité est le nom d'utilisateur, l'adresse e-mail et le nom complet. Avec une destination en HTTP non chiffré sur une autre machine, le mot de passe ne peut pas être transmis."
+    type = "select"
+    choices.username_and_password = "Identity and password"
+    choices.username = "Identity only, without the password"
+    choices.none = "Nothing"
+    default = "username_and_password"
+
     [install.assets_path]
     ask.en = "Static assets folder"
     ask.fr = "Dossier pour les fichiers statiques"
@@ -57,3 +68,4 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
+    main.auth_header = false
